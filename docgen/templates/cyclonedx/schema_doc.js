@@ -30,13 +30,25 @@ function anchorOnLoad() {
 }
 
 function anchorLink(linkTarget) {
-    const target = $( "#" + linkTarget );
+    // Validate linkTarget to ensure it contains only safe characters
+    const safeLinkTargetPattern = /^[a-zA-Z0-9_-]+$/;
+    if (!safeLinkTargetPattern.test(linkTarget)) {
+        console.error("Invalid linkTarget detected: ", linkTarget);
+        return;
+    }
+    // Jembot
+    // Use a safer DOM API to select the target
+    const target = document.getElementById(linkTarget);
+    if (!target) {
+        console.error("No element found with ID: ", linkTarget);
+        return;
+    }
+
     // Find the targeted element to expand and all its parents that can be expanded
-    target.parents().addBack().filter(".collapse:not(.show), .tab-pane, [role='tab']").each(
-        function(index) {
-            if($( this ).hasClass("collapse")) {
-                $( this ).collapse("show");
-            } else if ($( this ).hasClass("tab-pane")) {
+    $(target).parents().addBack().filter(".collapse:not(.show), .tab-pane, [role='tab']").each(function(index) {
+        if ($(this).hasClass("collapse")) {
+            $(this).collapse("show");
+        } else if ($(this).hasClass("tab-pane")) {
                 // We have the pane and not the tab itself, find the tab
                 const tabToShow = $( "a[href='#" + $( this ).attr("id") + "']" );
                 if (tabToShow) {
