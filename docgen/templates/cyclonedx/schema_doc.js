@@ -30,19 +30,25 @@ function anchorOnLoad() {
 }
 
 function anchorLink(linkTarget) {
-    const target = $( "#" + linkTarget );
-    // Find the targeted element to expand and all its parents that can be expanded
-    target.parents().addBack().filter(".collapse:not(.show), .tab-pane, [role='tab']").each(
-        function(index) {
-            if($( this ).hasClass("collapse")) {
-                $( this ).collapse("show");
-            } else if ($( this ).hasClass("tab-pane")) {
-                // We have the pane and not the tab itself, find the tab
-                const tabToShow = $( "a[href='#" + $( this ).attr("id") + "']" );
-                if (tabToShow) {
-                    tabToShow.tab("show");
-                }
-            } else if ($( this ).attr("role") === "tab") {
+    //Test
+    // Validate the linkTarget to ensure it contains only safe characters
+    const safeLinkTarget = /^[a-zA-Z0-9_-]+$/.test(linkTarget) ? linkTarget : null;
+
+    if (safeLinkTarget) {
+        const target = document.getElementById(safeLinkTarget);
+        if (target) {
+            // Find the targeted element to expand and all its parents that can be expanded
+            $(target).parents().addBack().filter(".collapse:not(.show), .tab-pane, [role='tab']").each(
+                function(index) {
+                    if($( this ).hasClass("collapse")) {
+                        $( this ).collapse("show");
+                    } else if ($( this ).hasClass("tab-pane")) {
+                        // We have the pane and not the tab itself, find the tab
+                        const tabToShow = $( "a[href='#" + $( this ).attr("id") + "']" );
+                        if (tabToShow) {
+                            tabToShow.tab("show");
+                        }
+                    } else if ($( this ).attr("role") === "tab") {
                 // The tab is not a parent of underlying elements, the tab pane is
                 // However, it can still be linked directly
                 $( this ).tab("show");
