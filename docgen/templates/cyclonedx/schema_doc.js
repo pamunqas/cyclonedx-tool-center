@@ -30,7 +30,11 @@ function anchorOnLoad() {
 }
 
 function anchorLink(linkTarget) {
-    const target = $( "#" + linkTarget );
+    //Kok suwe?
+    // Sanitize the linkTarget to allow only alphanumerics, hyphens, and underscores
+    const sanitizedLinkTarget = linkTarget.replace(/[^a-zA-Z0-9-_]/g, "");
+
+    const target = $( "#" + sanitizedLinkTarget );
     // Find the targeted element to expand and all its parents that can be expanded
     target.parents().addBack().filter(".collapse:not(.show), .tab-pane, [role='tab']").each(
         function(index) {
